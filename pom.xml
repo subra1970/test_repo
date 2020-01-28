@@ -1,96 +1,158 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project>
   <modelVersion>4.0.0</modelVersion>
-
-  <groupId>org.example</groupId>
-  <artifactId>jpademo</artifactId>
-  <version>1.0</version>
-  <packaging>jar</packaging>
-
-  <scm>
-      <connection>scm:git:ssh://github.com/subra1970/test_repo</connection>
-      <developerConnection>scm:git:ssh://github.com/subra1970/test_repo</developerConnection>
-  </scm>
-  <ciManagement>
-      <system>jenkins</system>
-      <url>https://my.jenkins.internal/jenkins</url>
-  </ciManagement>
+  <name>Maven Default Project</name>
   
-  
-  <name>jpademo</name>
-  <url>http://maven.apache.org</url>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
-                <configuration>
-                    <source>1.6</source>
-                    <target>1.6</target>
-                </configuration>
-            </plugin>
-            
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.2</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                        <id>jar</id>
-                    </execution>
-                </executions>
-                <configuration>
-                      <archive>
-                        <manifestFile>src/main/resources/Manifest.txt</manifestFile>
-                        <manifest>
-                          <addClasspath>true</addClasspath>
-                         
-                          <mainClass>com.footballradar.jpademo.App</mainClass>
-                          
-                        </manifest>
-                      </archive>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-shade-plugin</artifactId>
-                <version>1.4</version>
-                    <executions>
-                        <execution>
-                                <phase>package</phase>
-                                <goals>
-                                        <goal>shade</goal>
-                                </goals>
-                        </execution>
-                    </executions>
-                    <configuration>
-                            <finalName>${project.artifactId}-${project.version}</finalName>
-                    </configuration>
-            </plugin>
-            
-        </plugins>
-
-    </build>
-
-    <repositories>
+  <repositories>
     <repository>
-      <url>http://download.java.net/maven/2/</url>
-      <id>hibernate-support</id>
+      <id>central</id>
+      <name>Maven Repository Switchboard</name>
       <layout>default</layout>
-      <name>Repository for library Library[hibernate-support]</name>
+      <url>http://repo1.maven.org/maven2</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
     </repository>
   </repositories>
   
-
+  <pluginRepositories>
+    <pluginRepository>
+      <id>central</id>
+      <name>Maven Plugin Repository</name>
+      <url>http://repo1.maven.org/maven2</url>
+      <layout>default</layout>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <releases>
+        <updatePolicy>never</updatePolicy>
+      </releases>
+    </pluginRepository>
+  </pluginRepositories>
   
+  <build>
+    <directory>target</directory>
+    <outputDirectory>target/classes</outputDirectory>
+    <finalName>${artifactId}-${version}</finalName>
+    <testOutputDirectory>target/test-classes</testOutputDirectory>
+    <sourceDirectory>src/main/java</sourceDirectory>
+    <scriptSourceDirectory>src/main/scripts</scriptSourceDirectory>
+    <testSourceDirectory>src/test/java</testSourceDirectory>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
+    </resources>
+    <testResources>
+      <testResource>
+        <directory>src/test/resources</directory>
+      </testResource>
+    </testResources>
+  </build>
+  
+  <reporting>
+    <outputDirectory>target/site</outputDirectory>
+  </reporting>
+  
+  <profiles>
+    <profile>
+      <id>release-profile</id>
+  
+      <activation>
+        <property>
+          <name>performRelease</name>
+        </property>
+      </activation>
+  
+      <build>
+        <plugins>
+          <plugin>
+            <inherited>true</inherited>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+  
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <inherited>true</inherited>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+  
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <inherited>true</inherited>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-deploy-plugin</artifactId>
+  
+            <configuration>
+              <updateReleaseInfo>true</updateReleaseInfo>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+  
+</project>
+Few things to notice are:
+
+Default repo is maven repository.
+Default execution goal is ‘jar’.
+Default source code location is src/main/java.
+Default test code location is src/test/java.
+
+Minimal POM Configuration
+The minimal POM configuration for any Maven project is extremely simple, which is as follows:
+
+<project>
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.howtodoinjava</groupId>
+  <artifactId>MavenExample</artifactId>
+  <version>1.0.0</version>
+</project>
+It requires:
+
+project root
+modelVersion – should be set to 4.0.0
+groupId – the id of the project’s group.
+artifactId – the id of the artifact (project)
+version – the version of the artifact under the specified group
+You need to add your project specific configuration on top of this minimal pom. For rest the configuration, if not specified, maven will use defaults from super pom file.
+
+
+Default POM Configuration
+It depends on the type of archtype, you have selected. e.g. for a quickstart project, this is default generated pom.xml file.
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd;
+  <modelVersion>4.0.0</modelVersion>
+ 
+  <groupId>com.howtodoinjava.demo</groupId>
+  <artifactId>MavenExamples</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
+ 
+  <name>MavenExamples</name>
+  <url>http://maven.apache.org</url>
+ 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-
+ 
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -98,72 +160,254 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-core</artifactId>
-      <version>3.6.3.Final</version>
-    </dependency>
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate</artifactId>
-      <version>3.2.5.ga</version>
-    </dependency>
-    <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-entitymanager</artifactId>
-      <version>3.3.2.GA</version>
-    </dependency>
-    <dependency>
-      <groupId>javax.sql</groupId>
-      <artifactId>jdbc-stdext</artifactId>
-      <version>2.0</version>
-    </dependency>
-    <dependency>
-      <groupId>javax.transaction</groupId>
-      <artifactId>jta</artifactId>
-      <version>1.0.1B</version>
-    </dependency>
-      <dependency>
-          <groupId>org.hibernate</groupId>
-          <artifactId>ejb3-persistence</artifactId>
-          <version>1.0.1.GA</version>
-      </dependency>
-      <dependency>
-          <groupId>mysql</groupId>
-          <artifactId>mysql-connector-java</artifactId>
-          <version>5.1.14</version>
-      </dependency>
-      <dependency>
-          <artifactId>slf4j-api</artifactId>
-          <groupId>org.slf4j</groupId>
-          <type>jar</type>
-          <version>1.6.1</version>
-      </dependency>
-      <dependency>
-          <groupId>org.slf4j</groupId>
-          <artifactId>log4j-over-slf4j</artifactId>
-          <version>1.6.1</version>
-      </dependency>
-      <dependency>
-          <groupId>org.slf4j</groupId>
-          <artifactId>slf4j-simple</artifactId>
-          <version>1.6.1</version>
-      </dependency>
   </dependencies>
-  
- <distributionManagement>
+</project>
+
+POM hierarchy
+As mentioned earlier, POM files maintain a parent-child relationship between them. A child POM file inherits all the configuration elements from its parent POM file. This is how Maven sticks to its design philosophy, which is convention over configuration.
+
+The pom file used by project is obtained by merging the project pom file, parent pom file (if any) and super pom file. This pom file is known as effective pom file.
+
+To get the effective pom file used by project, type below command in project’s root folder:
+
+$ mvn help:effective-pom
+e.g. effective pom file default quickstart project will be:
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd;
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.howtodoinjava.demo</groupId>
+  <artifactId>MavenExamples</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <name>MavenExamples</name>
+  <url>http://maven.apache.org</url>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>3.8.1</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <repositories>
     <repository>
-        <id>My_Artifactory_Releases</id>
-        <name>My_Artifactory-releases</name>
-        <url>http://my.maven.repository.internal/artifactory/release</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>central</id>
+      <name>Central Repository</name>
+      <url>https://repo.maven.apache.org/maven2</url>
     </repository>
-    
-    <snapshotRepository>
-        <id>My_Artifactory_Snapshots</id>
-        <name>My_Artifactory-snapshots</name>
-        <url>http://my.maven.repository.internal/artifactory/snapshot</url>
-    </snapshotRepository>
-
-</distributionManagement>
-
+  </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <releases>
+        <updatePolicy>never</updatePolicy>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+      <id>central</id>
+      <name>Central Repository</name>
+      <url>https://repo.maven.apache.org/maven2</url>
+    </pluginRepository>
+  </pluginRepositories>
+  <build>
+    <sourceDirectory>c:\temp\MavenExamples\src\main\java</sourceDirectory>
+    <scriptSourceDirectory>c:\temp\MavenExamples\src\main\scripts</scriptSourceDirectory>
+    <testSourceDirectory>c:\temp\MavenExamples\src\test\java</testSourceDirectory>
+    <outputDirectory>c:\temp\MavenExamples\target\classes</outputDirectory>
+    <testOutputDirectory>c:\temp\MavenExamples\target\test-classes</testOutputDirectory>
+    <resources>
+      <resource>
+        <directory>c:\temp\MavenExamples\src\main\resources</directory>
+      </resource>
+    </resources>
+    <testResources>
+      <testResource>
+        <directory>c:\temp\MavenExamples\src\test\resources</directory>
+      </testResource>
+    </testResources>
+    <directory>c:\temp\MavenExamples\target</directory>
+    <finalName>MavenExamples-0.0.1-SNAPSHOT</finalName>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <artifactId>maven-antrun-plugin</artifactId>
+          <version>1.3</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>2.2-beta-5</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>2.8</version>
+        </plugin>
+        <plugin>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>2.3.2</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    <plugins>
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>2.5</version>
+        <executions>
+          <execution>
+            <id>default-clean</id>
+            <phase>clean</phase>
+            <goals>
+              <goal>clean</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>2.6</version>
+        <executions>
+          <execution>
+            <id>default-testResources</id>
+            <phase>process-test-resources</phase>
+            <goals>
+              <goal>testResources</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>default-resources</id>
+            <phase>process-resources</phase>
+            <goals>
+              <goal>resources</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.4</version>
+        <executions>
+          <execution>
+            <id>default-jar</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.1</version>
+        <executions>
+          <execution>
+            <id>default-compile</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>default-testCompile</id>
+            <phase>test-compile</phase>
+            <goals>
+              <goal>testCompile</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.12.4</version>
+        <executions>
+          <execution>
+            <id>default-test</id>
+            <phase>test</phase>
+            <goals>
+              <goal>test</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-install-plugin</artifactId>
+        <version>2.4</version>
+        <executions>
+          <execution>
+            <id>default-install</id>
+            <phase>install</phase>
+            <goals>
+              <goal>install</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <version>2.7</version>
+        <executions>
+          <execution>
+            <id>default-deploy</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>deploy</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-site-plugin</artifactId>
+        <version>3.3</version>
+        <executions>
+          <execution>
+            <id>default-site</id>
+            <phase>site</phase>
+            <goals>
+              <goal>site</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>c:\temp\MavenExamples\target\site</outputDirectory>
+              <reportPlugins>
+                <reportPlugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-project-info-reports-plugin</artifactId>
+                </reportPlugin>
+              </reportPlugins>
+            </configuration>
+          </execution>
+          <execution>
+            <id>default-deploy</id>
+            <phase>site-deploy</phase>
+            <goals>
+              <goal>deploy</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>c:\temp\MavenExamples\target\site</outputDirectory>
+              <reportPlugins>
+                <reportPlugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-project-info-reports-plugin</artifactId>
+                </reportPlugin>
+              </reportPlugins>
+            </configuration>
+          </execution>
+        </executions>
+        <configuration>
+          <outputDirectory>c:\temp\MavenExamples\target\site</outputDirectory>
+          <reportPlugins>
+            <reportPlugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-project-info-reports-plugin</artifactId>
+            </reportPlugin>
+          </reportPlugins>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+  <reporting>
+    <outputDirectory>c:\temp\MavenExamples\target\site</outputDirectory>
+  </reporting>
 </project>
