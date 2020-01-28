@@ -8,8 +8,8 @@
   <packaging>jar</packaging>
 
   <scm>
-      <connection>scm:git:ssh://my.git.server.internal/home/git/jpademo</connection>
-      <developerConnection>scm:git:ssh://my.git.server.internal/home/git/jpademo</developerConnection>
+      <connection>scm:git:ssh://github.com/subra1970/test_repo</connection>
+      <developerConnection>scm:git:ssh://github.com/subra1970/test_repo</developerConnection>
   </scm>
   <ciManagement>
       <system>jenkins</system>
